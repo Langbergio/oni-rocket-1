@@ -1,0 +1,28 @@
+.table {
+  tr {
+    th, td {
+      padding: 16px 0;
+    }
+
+    th {
+      width: 80px;
+    }
+
+    td {
+      width: 200px;
+
+      > * {
+        width: 100%;
+      }
+    }
+
+    &.line {
+      background: #ddd;
+
+      th, td {
+        padding: 0;
+        height: 1px;
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "antd": "^3.10.7",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2"
+  },
+  "scripts": {
+    "start": "umi dev"
+  },
+  "devDependencies": {
+    "umi": "^2.2.7"
+  }
+}
