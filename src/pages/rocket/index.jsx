@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip, Icon } from 'antd';
-import { useCheckbox, useSelect } from '@/utils/useHooks';
+import { Button, Input, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip, Icon } from 'antd';
+import { useInput, useCheckbox, useSelect } from '@/utils/useHooks';
 import { calculate } from '@/utils/cal';
 import styles from './index.less';
 
@@ -28,7 +28,7 @@ export default function() {
   const type = useSelect('steam');
   const oxygen = useSelect('solid');
 
-  const distance = useSelect(10000);
+  const distance = useInput(10000);
   const waste = useCheckbox(false);
   const oxygenBug = useCheckbox(true);
 
@@ -36,8 +36,30 @@ export default function() {
 
   const isSteam = type.value === 'steam';
 
+  const onSubmit = () => {
+    const newResult = calculate({
+      type: type.value,
+      distance: distance.value,
+      allowWaste: waste.checked,
+      oxygenType: oxygen.value,
+      oxygenBug: oxygenBug.checked,
+
+      research: researchCount.value,
+      warehouse: warehouseCount.value,
+      gas: gasCount.value,
+      liquid: liquidCount.value,
+      creature: creatureCount.value,
+    });
+
+    setResult(newResult);
+  };
+
   return (
-    <div>
+    <div onKeyPress={(({ which }) => {
+      if (which === 13) {
+        onSubmit();
+      }
+    })}>
       <Row gutter={16}>
         <Col xs={24} sm={12} md={10}>
           <table className={styles.table}>
@@ -50,7 +72,7 @@ export default function() {
               {renderInputRow('货仓数量', warehouseCount)}
 
               {/* 气仓 */}
-              {renderInputRow('液体仓数量', gasCount)}
+              {renderInputRow('气体仓数量', gasCount)}
 
               {/* 液体仓 */}
               {renderInputRow('液体仓数量', liquidCount)}
@@ -68,9 +90,11 @@ export default function() {
                 <th>引擎类型</th>
                 <td>
                   <Select {...type}>
-                    <Option value="steam">蒸汽</Option>
-                    <Option value="oil">石油</Option>
-                    <Option value="hydrogen">氢气</Option>
+                    {[['steam', '蒸汽'], ['oil', '石油'], ['hydrogen', '氢气']].map(([value, name]) => (
+                      <Option key={value} value={value}>
+                        {name}
+                      </Option>
+                    ))}
                   </Select>
                 </td>
               </tr>
@@ -89,7 +113,17 @@ export default function() {
               )}
 
               {/* 飞行距离 */}
-              {renderInputRow('飞行距离', distance)}
+              <tr>
+                <th>飞行距离</th>
+                <td>
+                  <Input
+                    className={styles.input}
+                    type="number"
+                    {...distance}
+                    addonAfter="KM"
+                  />
+                </td>
+              </tr>
 
               {/* 允许浪费 */}
               <tr>
@@ -127,23 +161,7 @@ export default function() {
 
               <tr>
                 <td colSpan={2}>
-                  <Button type="primary" icon="laptop" onClick={() => {
-                    const newResult = calculate({
-                      type: type.value,
-                      distance: distance.value,
-                      allowWaste: waste.checked,
-                      oxygenType: oxygen.value,
-                      oxygenBug: oxygenBug.checked,
-
-                      research: researchCount.value,
-                      warehouse: warehouseCount.value,
-                      gas: gasCount.value,
-                      liquid: liquidCount.value,
-                      creature: creatureCount.value,
-                    });
-
-                    setResult(newResult);
-                  }}>
+                  <Button type="primary" icon="laptop" onClick={onSubmit}>
                     计算需求
                   </Button>
                 </td>
