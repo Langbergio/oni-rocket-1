@@ -1,4 +1,5 @@
 export default {
-  base: "/oni-rocket",
-  publicPath: "/oni-rocket/"
+  history: 'hash',
+  base: '/oni-rocket',
+  publicPath: '/oni-rocket/'
 }
