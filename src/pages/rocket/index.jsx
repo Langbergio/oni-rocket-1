@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip } from 'antd';
+import { Button, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip, Icon } from 'antd';
 import { useCheckbox, useSelect } from '@/utils/useHooks';
 import { calculate } from '@/utils/cal';
 import styles from './index.less';
@@ -172,7 +172,9 @@ export default function() {
                   ))}
                 </Tabs>
               ) : (
-                <h1>没有可行的方案</h1>
+                <h1>
+                  <Icon type="frown" /> 没有可行的方案
+                </h1>
               )
             )}
           </div>
