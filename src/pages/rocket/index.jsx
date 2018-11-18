@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, InputNumber, Select, Row, Col, Tabs } from 'antd';
-import { useInput, useSelect } from '@/utils/useHooks';
+import { Button, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip } from 'antd';
+import { useCheckbox, useSelect } from '@/utils/useHooks';
 import { calculate } from '@/utils/cal';
 import styles from './index.less';
 
@@ -29,6 +29,8 @@ export default function() {
   const oxygen = useSelect('solid');
 
   const distance = useSelect(30000);
+  const waste = useCheckbox(false);
+  const oxygenBug = useCheckbox(true);
 
   const [result, setResult] = useState(null);
 
@@ -89,12 +91,47 @@ export default function() {
               {/* 飞行距离 */}
               {renderInputRow('飞行距离', distance)}
 
+              {/* 允许浪费 */}
+              <tr>
+                <th />
+                <td>
+                <Tooltip
+                  overlayClassName={styles.tooltip}
+                  placement="topLeft"
+                  title="例如同时存在 “3 个燃料舱，0 个助推器” 和 “3 个燃料舱，1 个助推器” 都可行时，保留这两个结果。"
+                >
+                  <Checkbox {...waste}>
+                    允许组件浪费
+                  </Checkbox>
+                </Tooltip>
+                </td>
+              </tr>
+
+              {/* 氧化剂 bug */}
+              <tr>
+                <th />
+                <td>
+                <Tooltip
+                  overlayClassName={styles.tooltip}
+                  placement="topLeft"
+                  title="游戏中，小人总是尝试装满氧化剂而无视上限设置。勾选后以满氧化剂计算。"
+                >
+                  <Checkbox {...oxygenBug}>
+                  氧石 bug
+                  </Checkbox>
+                </Tooltip>
+                </td>
+              </tr>
+
               <tr>
                 <td colSpan={2}>
                   <Button type="primary" icon="laptop" onClick={() => {
                     const newResult = calculate({
                       type: type.value,
                       distance: distance.value,
+                      allowWaste: waste.checked,
+                      oxygenType: oxygen.value,
+                      oxygenBug: oxygenBug.checked,
 
                       research: researchCount.value,
                       warehouse: warehouseCount.value,

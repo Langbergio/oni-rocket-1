@@ -14,7 +14,7 @@ const WEIGHTS = {
   warehouse: 2000,
   gas: 1000,
   liquid: 1000,
-  creature: 10000,
+  creature: 1000,
 
   command: 200,
   person: 30,
@@ -49,7 +49,10 @@ function getPunish(weight) {
   );
 }
 
-export function calculate({ type, distance: limitDistance, ...counts }) {
+export function calculate({
+  type, distance: limitDistance, oxygenType, allowWaste, oxygenBug,
+  ...counts
+}) {
   console.clear();
 
   const effect = EFFECTS[type];
@@ -108,12 +111,19 @@ export function calculate({ type, distance: limitDistance, ...counts }) {
         const fuelCount = Math.ceil(i / CAPACITIES.fuel);
         const oxygenCount = Math.ceil(i / CAPACITIES.oxygen);
 
-        const mergedWeight = boosterWeight
+        let mergedWeight = boosterWeight
           + WEIGHTS.fuel * fuelCount      // 燃料罐重量
           + WEIGHTS.oxygen * oxygenCount  // 氧气罐重量
-          + i + i                         // 燃料 + 氧石
+          + i                             // 燃料重量
         ;
-        const mergedDistance = boosterDistance + effect * i;
+        if (oxygenBug) {
+          mergedWeight += CAPACITIES.oxygen * oxygenCount;
+        } else {
+          mergedWeight +=  i; // 氧气罐重量 + 氧石
+        }
+        const mergedDistance = Math.floor(
+          boosterDistance + effect * i * (oxygenType === 'liquid' ? LIQUID_OXYGEN : 1)
+        );
 
         const punish = getPunish(mergedWeight);
         const finalDistance = mergedDistance - punish;
@@ -137,6 +147,8 @@ export function calculate({ type, distance: limitDistance, ...counts }) {
     }
 
     // 去重
+    if (allowWaste) return solutionList;
+
     return solutionList.reduce((list, solution) => {
       if (list.some(s => s.fuelCount === solution.fuelCount)) return list;
       return [...list, solution];

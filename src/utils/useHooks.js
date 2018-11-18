@@ -10,6 +10,16 @@ export function useInput(defaultValue) {
   };
 }
 
+export function useCheckbox(defaultValue) {
+  const [checked, setChecked] = useState(defaultValue);
+  return {
+    checked,
+    onChange(e) {
+      setChecked(e.target.checked);
+    }
+  };
+}
+
 export function useSelect(defaultValue) {
   const [value, setValue] = useState(defaultValue);
   return {
