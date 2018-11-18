@@ -18,7 +18,7 @@ export default class Home extends React.Component {
             defaultSelectedKeys={['1']}
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="1">Rocket</Menu.Item>
+            <Menu.Item key="1">火箭</Menu.Item>
           </Menu>
         </Header>
         <Content>
