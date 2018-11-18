@@ -1,3 +1,6 @@
 .vscode
 node_modules
 dist
+index.html
+umi.css
+umi.js
