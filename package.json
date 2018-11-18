@@ -5,7 +5,9 @@
     "react-dom": "^16.7.0-alpha.2"
   },
   "scripts": {
-    "start": "umi dev"
+    "start": "umi dev",
+    "dist": "umi build",
+    "deploy": "./deploy.sh"
   },
   "devDependencies": {
     "umi": "^2.2.7"
