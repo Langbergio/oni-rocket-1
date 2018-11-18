@@ -1,4 +1,4 @@
 export default {
-  routerBase: "/oni-rocket/",
+  base: "/oni-rocket",
   publicPath: "/oni-rocket/"
 }
