@@ -1,9 +1,11 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Card } from 'antd';
 import 'antd/dist/antd.css';
 import styles from './index.less';
 
 const { Header, Content, Footer } = Layout;
+
+document.title = '火箭计算器';
 
 export default class Home extends React.Component {
   render() {
@@ -23,7 +25,9 @@ export default class Home extends React.Component {
         </Header>
         <Content>
           <div className={styles.content}>
-            {children}
+            <Card title="火箭计算">
+              {children}
+            </Card>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
