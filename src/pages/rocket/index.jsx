@@ -19,16 +19,16 @@ export function renderInputRow(title, props) {
 }
 
 export default function() {
-  const researchCount = useSelect(4);
-  const warehouseCount = useSelect(1);
+  const researchCount = useSelect(0);
+  const warehouseCount = useSelect(0);
   const gasCount = useSelect(0);
   const liquidCount = useSelect(0);
   const creatureCount = useSelect(0);
 
-  const type = useSelect('oil');
+  const type = useSelect('steam');
   const oxygen = useSelect('solid');
 
-  const distance = useSelect(30000);
+  const distance = useSelect(10000);
   const waste = useCheckbox(false);
   const oxygenBug = useCheckbox(true);
 
@@ -108,20 +108,22 @@ export default function() {
               </tr>
 
               {/* 氧化剂 bug */}
-              <tr>
-                <th />
-                <td>
-                <Tooltip
-                  overlayClassName={styles.tooltip}
-                  placement="topLeft"
-                  title="游戏中，小人总是尝试装满氧化剂而无视上限设置。勾选后以满氧化剂计算。"
-                >
-                  <Checkbox {...oxygenBug}>
-                  氧石 bug
-                  </Checkbox>
-                </Tooltip>
-                </td>
-              </tr>
+              {!isSteam && (
+                <tr>
+                  <th />
+                  <td>
+                  <Tooltip
+                    overlayClassName={styles.tooltip}
+                    placement="topLeft"
+                    title="游戏中，小人总是尝试装满氧化剂而无视上限设置。勾选后以满氧化剂计算。"
+                  >
+                    <Checkbox {...oxygenBug}>
+                    氧石 bug
+                    </Checkbox>
+                  </Tooltip>
+                  </td>
+                </tr>
+              )}
 
               <tr>
                 <td colSpan={2}>
