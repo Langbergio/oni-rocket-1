@@ -14,7 +14,7 @@ const WEIGHTS = {
   warehouse: 2000,
   gas: 1000,
   liquid: 1000,
-  creature: 1000,
+  creature: 2000,
 
   command: 200,
   person: 30,
