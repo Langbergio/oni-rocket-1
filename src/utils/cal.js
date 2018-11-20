@@ -102,6 +102,8 @@ export function calculate({
     const effect = EFFECTS[type];
     const solutionList = [];
 
+    basicWeight += WEIGHTS[type];
+
     // 其他引擎哦
     for (let boosterCount = 0; boosterCount <= MAX_BOOSTER; boosterCount += 1) {
       const boosterWeight = basicWeight + WEIGHTS.booster * boosterCount;
@@ -111,16 +113,24 @@ export function calculate({
         const fuelCount = Math.ceil(i / CAPACITIES.fuel);
         const oxygenCount = Math.ceil(i / CAPACITIES.oxygen);
 
+        const statistic = {};
+
         let mergedWeight = boosterWeight
           + WEIGHTS.fuel * fuelCount      // 燃料罐重量
           + WEIGHTS.oxygen * oxygenCount  // 氧气罐重量
-          + i                             // 燃料重量
         ;
+        statistic.dryWeight = mergedWeight;
+
+        let wetWeight = i;                // 燃料重量
         if (oxygenBug) {
-          mergedWeight += CAPACITIES.oxygen * oxygenCount;
+          wetWeight += CAPACITIES.oxygen * oxygenCount;
         } else {
-          mergedWeight +=  i; // 氧气罐重量 + 氧石
+          wetWeight +=  i; // 氧气罐重量 + 氧石
         }
+        statistic.wetWeight = wetWeight;
+
+        mergedWeight += wetWeight;
+
         const mergedDistance = Math.floor(
           boosterDistance + effect * i * (oxygenType === 'liquid' ? LIQUID_OXYGEN : 1)
         );
@@ -130,6 +140,7 @@ export function calculate({
 
         if (limitDistance <= finalDistance) {
           solutionList.push({
+            ...statistic,
             capacity: i,
             booster: boosterCount,
             fuelCount,

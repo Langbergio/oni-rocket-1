@@ -183,7 +183,9 @@ export default function() {
                         <p>燃料 {solution.capacity} 千克</p>
 
                         <h4>统计：</h4>
-                        <p>重量 {solution.weight} 千克</p>
+                        {solution.dryWeight ? <p>干重量 {solution.dryWeight} 千克</p> : ''}
+                        {solution.wetWeight ? <p>湿重量 {solution.wetWeight} 千克</p> : ''}
+                        <p>总重量 {solution.weight} 千克</p>
                         <p>理想距离 {solution.mergedDistance} 千米</p>
                         <p>惩罚距离 {solution.punish} 千米</p>
                         <p>实际距离 {solution.finalDistance} 千米</p>
