@@ -7,7 +7,8 @@
   "scripts": {
     "start": "umi dev",
     "dist": "umi build",
-    "deploy": "./deploy.sh"
+    "deploy": "./deploy.sh",
+    "inspect": "umi inspect"
   },
   "devDependencies": {
     "umi": "^2.2.7"

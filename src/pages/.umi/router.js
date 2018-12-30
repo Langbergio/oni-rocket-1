@@ -22,6 +22,11 @@ let routes = [
         "component": require('../rocket/index.jsx').default
       },
       {
+        "path": "/rocket/test",
+        "exact": true,
+        "component": require('../rocket/test.js').default
+      },
+      {
         "component": () => React.createElement(require('/Users/jilin/projects/my/rocket/node_modules/_umi-build-dev@1.2.6@umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: false })
       }
     ]
