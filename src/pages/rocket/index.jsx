@@ -30,7 +30,6 @@ export default function() {
 
   const distance = useInput(10000);
   const waste = useCheckbox(false);
-  const oxygenBug = useCheckbox(true);
 
   const [result, setResult] = useState(null);
 
@@ -42,7 +41,6 @@ export default function() {
       distance: distance.value,
       allowWaste: waste.checked,
       oxygenType: oxygen.value,
-      oxygenBug: oxygenBug.checked,
 
       research: researchCount.value,
       warehouse: warehouseCount.value,
@@ -140,24 +138,6 @@ export default function() {
                 </Tooltip>
                 </td>
               </tr>
-
-              {/* 氧化剂 bug */}
-              {!isSteam && (
-                <tr>
-                  <th />
-                  <td>
-                  <Tooltip
-                    overlayClassName={styles.tooltip}
-                    placement="topLeft"
-                    title="游戏中，小人总是尝试装满氧化剂而无视上限设置。勾选后以满氧化剂计算。"
-                  >
-                    <Checkbox {...oxygenBug}>
-                    氧石 bug
-                    </Checkbox>
-                  </Tooltip>
-                  </td>
-                </tr>
-              )}
 
               <tr>
                 <td colSpan={2}>

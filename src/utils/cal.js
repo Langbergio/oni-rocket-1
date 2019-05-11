@@ -121,12 +121,7 @@ export function calculate({
         ;
         statistic.dryWeight = mergedWeight;
 
-        let wetWeight = i;                // 燃料重量
-        if (oxygenBug) {
-          wetWeight += CAPACITIES.oxygen * oxygenCount;
-        } else {
-          wetWeight +=  i; // 氧气罐重量 + 氧石
-        }
+        let wetWeight = i * 2;                // 燃料 + 氧石重量
         statistic.wetWeight = wetWeight;
 
         mergedWeight += wetWeight;

@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "antd": "^3.10.7",
-    "react": "^16.7.0-alpha.2",
-    "react-dom": "^16.7.0-alpha.2"
+    "antd": "^3.16.4",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "scripts": {
     "start": "umi dev",
@@ -10,6 +10,6 @@
     "deploy": "./deploy.sh"
   },
   "devDependencies": {
-    "umi": "^2.2.7"
+    "umi": "^2.6.14"
   }
 }
