@@ -1,11 +1,27 @@
 import React, { useState } from 'react';
-import { Button, Input, InputNumber, Select, Row, Col, Tabs, Checkbox, Tooltip, Icon } from 'antd';
-import { useInput, useCheckbox, useSelect } from '@/utils/useHooks';
+import {
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Row,
+  Col,
+  Tabs,
+  Checkbox,
+  Tooltip,
+  Icon,
+  Typography,
+  Alert,
+} from 'antd';
+import { useInput, useCheckbox, useSelect, useHistory } from '@/utils/useHooks';
 import { calculate } from '@/utils/cal';
 import styles from './index.less';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
+const { Title } = Typography;
+
+const TYPE_LIST = [ [ 'steam', '蒸汽' ], [ 'oil', '石油' ], [ 'hydrogen', '氢气' ] ];
 
 export function renderInputRow(title, props) {
   return (
@@ -32,12 +48,31 @@ export default function() {
   const distance = useInput(10000);
   const waste = useCheckbox(false);
 
-  const [result, setResult] = useState(null);
+  const [ result, setResult ] = useState(null);
+
+  // 历史记录
+  const [ historyList, setHistoryList ] = useHistory([]);
 
   const isSteam = type.value === 'steam';
 
-  const onSubmit = () => {
-    const newResult = calculate({
+  // 填写数值
+  function fillQuery(query) {
+    researchCount.setValue(query.research);
+    warehouseCount.setValue(query.warehouse);
+    gasCount.setValue(query.gas);
+    liquidCount.setValue(query.liquid);
+    creatureCount.setValue(query.creature);
+    visitorRoomCount.setValue(query.visitorRoom);
+
+    type.setValue(query.type);
+    oxygen.setValue(query.oxygenType);
+
+    distance.setValue(query.distance);
+    waste.setValue(query.waste);
+  }
+
+  const onSubmit = ({ isHistory, ...history }) => {
+    const query = isHistory ? history : {
       type: type.value,
       distance: distance.value,
       allowWaste: waste.checked,
@@ -49,19 +84,29 @@ export default function() {
       liquid: liquidCount.value,
       creature: creatureCount.value,
       visitorRoom: visitorRoomCount.value,
-    });
+    };
+
+    const newResult = calculate(query);
 
     setResult(newResult);
+
+    // 添加历史
+    if (!isHistory) {
+      setHistoryList([ ...historyList, query ].slice(0, 20));
+    }
   };
 
   return (
-    <div onKeyPress={(({ which }) => {
-      if (which === 13) {
-        onSubmit();
-      }
-    })}>
+    <div
+      onKeyPress={({ which }) => {
+        if (which === 13) {
+          onSubmit();
+        }
+      }}
+    >
       <Row gutter={16}>
-        <Col xs={24} sm={12} md={10}>
+        {/* 第一列 */}
+        <Col xs={24} sm={12} md={9}>
           <table className={styles.table}>
             <tbody>
               {/* ===================== 搜刮 ===================== */}
@@ -93,7 +138,7 @@ export default function() {
                 <th>引擎类型</th>
                 <td>
                   <Select {...type}>
-                    {[['steam', '蒸汽'], ['oil', '石油'], ['hydrogen', '氢气']].map(([value, name]) => (
+                    {TYPE_LIST.map(([ value, name ]) => (
                       <Option key={value} value={value}>
                         {name}
                       </Option>
@@ -119,12 +164,7 @@ export default function() {
               <tr>
                 <th>飞行距离</th>
                 <td>
-                  <Input
-                    className={styles.input}
-                    type="number"
-                    {...distance}
-                    addonAfter="KM"
-                  />
+                  <Input className={styles.input} type="number" {...distance} addonAfter="KM" />
                 </td>
               </tr>
 
@@ -132,15 +172,13 @@ export default function() {
               <tr>
                 <th />
                 <td>
-                <Tooltip
-                  overlayClassName={styles.tooltip}
-                  placement="topLeft"
-                  title="例如同时存在 “3 个燃料舱，0 个助推器” 和 “3 个燃料舱，1 个助推器” 都可行时，保留这两个结果。"
-                >
-                  <Checkbox {...waste}>
-                    允许组件浪费
-                  </Checkbox>
-                </Tooltip>
+                  <Tooltip
+                    overlayClassName={styles.tooltip}
+                    placement="topLeft"
+                    title="例如同时存在 “3 个燃料舱，0 个助推器” 和 “3 个燃料舱，1 个助推器” 都可行时，保留这两个结果。"
+                  >
+                    <Checkbox {...waste}>允许组件浪费</Checkbox>
+                  </Tooltip>
                 </td>
               </tr>
 
@@ -154,10 +192,12 @@ export default function() {
             </tbody>
           </table>
         </Col>
-        <Col xs={24} sm={12} md={14}>
+
+        {/* 第二列 */}
+        <Col xs={24} sm={12} md={historyList.length ? 8 : 15}>
           <div className={styles.result}>
-            {result && (
-              result.length ? (
+            {result &&
+              (result.length ? (
                 <Tabs tabBarGutter={8}>
                   {result.map((solution, index) => (
                     <TabPane tab={`方案 ${index + 1}`} key={index}>
@@ -182,10 +222,60 @@ export default function() {
                 <h1>
                   <Icon type="frown" /> 没有可行的方案
                 </h1>
-              )
-            )}
+              ))}
           </div>
         </Col>
+
+        {/* 第一列 */}
+        {!!historyList.length && (
+          <Col xs={24} sm={24} md={7}>
+            <Alert
+              type="info"
+              message={
+                <div className={styles.history}>
+                  <Title level={4}>
+                    历史记录
+                    <a
+                      style={{ float: 'right' }}
+                      className={styles.remove}
+                      onClick={() => {
+                        setHistoryList([]);
+                      }}
+                    >
+                      <Icon type="delete" />
+                    </a>
+                  </Title>
+                  <ul>
+                    {historyList.map((history, index) => {
+                      const { distance, type } = history;
+                      const typeStr = TYPE_LIST.find(([ t ]) => t === type)[1];
+                      const oxygenStr = oxygen.value === 'solid' ? '氧石' : '液氧';
+                      return (
+                        <li key={index}>
+                          <a
+                            className={styles.remove}
+                            onClick={() => {
+                              setHistoryList(historyList.filter((item) => item !== history));
+                            }}
+                          >
+                            <Icon type="stop" />
+                          </a>{' | '}
+                          <a onClick={() => {
+                            // 填入数据
+                            fillQuery(history);
+                            onSubmit({ ...history, isHistory: true });
+                          }}>
+                            [{typeStr} - {oxygenStr}] {distance} KM
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              }
+            />
+          </Col>
+        )}
       </Row>
     </div>
   );

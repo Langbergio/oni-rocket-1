@@ -6,7 +6,8 @@ export function useInput(defaultValue) {
     value,
     onChange(e) {
       setValue(e.target.value);
-    }
+    },
+    setValue,
   };
 }
 
@@ -16,7 +17,8 @@ export function useCheckbox(defaultValue) {
     checked,
     onChange(e) {
       setChecked(e.target.checked);
-    }
+    },
+    setValue: setChecked,
   };
 }
 
@@ -26,6 +28,25 @@ export function useSelect(defaultValue) {
     value,
     onChange(val) {
       setValue(val);
-    }
+    },
+    setValue,
   };
+}
+
+export function useHistory(defaultValue) {
+  const [, forceUpdate] = useState();
+  let value = defaultValue;
+
+  try {
+    value = JSON.parse(localStorage.getItem('history')) || defaultValue;
+  } catch (err) {
+    // Do nothing...
+  }
+
+  function setValue(newValue) {
+    localStorage.setItem('history', JSON.stringify(newValue));
+    forceUpdate({});
+  }
+
+  return [value, setValue];
 }
