@@ -15,6 +15,7 @@ const WEIGHTS = {
   gas: 1000,
   liquid: 1000,
   creature: 2000,
+  visitorRoom: 200,
 
   command: 200,
   person: 30,

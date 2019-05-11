@@ -24,6 +24,7 @@ export default function() {
   const gasCount = useSelect(0);
   const liquidCount = useSelect(0);
   const creatureCount = useSelect(0);
+  const visitorRoomCount = useSelect(0);
 
   const type = useSelect('steam');
   const oxygen = useSelect('solid');
@@ -47,6 +48,7 @@ export default function() {
       gas: gasCount.value,
       liquid: liquidCount.value,
       creature: creatureCount.value,
+      visitorRoom: visitorRoomCount.value,
     });
 
     setResult(newResult);
@@ -77,6 +79,9 @@ export default function() {
 
               {/* 生物仓 */}
               {renderInputRow('生物仓数量', creatureCount)}
+
+              {/* 生物仓 */}
+              {renderInputRow('观光仓数量', visitorRoomCount)}
 
               {/* ===================== 引擎 ===================== */}
               <tr className={styles.line}>
