@@ -1,11 +1,14 @@
 // 1000g = 1,600 kcal
 
+const GOAL_KCAL = 400000;
+
 const COOKER_MULTIPLE_MEAT = 4000 / 3200;
 const COOKER_MULTIPLE_FISH = 1600 / 1000;
 
 const KCAL_MEAT = {
   树鼠: 1600,
   哈奇: 3200,
+  壁虎: 3200,
   飞鱼: 1600,
   老鼠: 16000,
 };
@@ -29,8 +32,8 @@ export const animals = Object.keys(ANIMALS_KCAL);
 export default ({ kcal, cycle, count, hunger, ...animalCounts }) => {
   const planConsume = ((count - hunger) * 1000 + hunger * 1500) * cycle;
   let providesMeatKcal = 0; // 动物提供的肉卡
-  let missingMeatKcal = kcal; // 需要的肉卡
-  const restKcal = kcal - planConsume;
+  let missingMeatKcal = GOAL_KCAL - kcal; // 需要的肉卡
+  const restKcal = GOAL_KCAL - kcal - planConsume;
 
   // 计算剩余不足的肉卡
   Object.keys(ANIMALS_KCAL).forEach(name => {

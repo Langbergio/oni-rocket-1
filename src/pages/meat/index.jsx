@@ -17,7 +17,7 @@ const Meat = () => {
   };
 
   const initialValues = {
-    kcal: 400000,
+    kcal: 0,
     cycle: 100,
     count: 3,
     hunger: 0,
@@ -32,7 +32,7 @@ const Meat = () => {
       <Row gutter={16}>
         <Col xs={24} sm={12} md={9}>
           <Form form={form} layout="vertical" initialValues={initialValues} onFinish={onFinish}>
-            <Item label="剩余卡路里" name="kcal">
+            <Item label="已消耗卡路里" name="kcal">
               <InputNumber style={{ width: '100%' }} />
             </Item>
 
